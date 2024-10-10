@@ -17,9 +17,12 @@ app.get("/*", async (req, res) => {
     const host = req.hostname;
     let id;
 
-    if (host.includes("onrender.com")) {
-      // For render URLs like https://4aa6d.skycode-2.onrender.com
-      // We want to extract '4aa6d' from the subdomain
+    // Extract the ID for your custom domain
+    if (host.endsWith("dhruvsood.in")) {
+      // For custom domains like abcde.dhruvsood.in
+      const subdomains = host.split(".");
+      id = subdomains[0]; // This will get 'abcde'
+    } else if (host.includes("onrender.com")) {
       const subdomains = host.split(".");
       id = subdomains[0]; // This will get '4aa6d'
     } else if (host.includes("nip.io")) {
@@ -67,10 +70,4 @@ app.get("/*", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-  console.log(`You can access your deployments using the following formats:`);
-  console.log(`- http://[project-id].127.0.0.1.nip.io:${PORT}`);
-  console.log(`- http://[project-id].localtest.me:${PORT}`);
-  console.log(`- https://[project-id].your-app-name.onrender.com`);
-});
+app.listen(3001)

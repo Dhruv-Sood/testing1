@@ -25,20 +25,25 @@ const PORT = process.env.PORT || 3001;
 app.get("/*", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     try {
-        // Extract the host and remove the development domain suffix
         const host = req.hostname;
         let id;
-        // Handle different development domain scenarios
-        if (host.includes("nip.io")) {
-            // Format: abcde.127.0.0.1.nip.io
+        // Extract the ID for your custom domain
+        if (host.endsWith("dhruvsood.in")) {
+            // For custom domains like abcde.dhruvsood.in
+            const subdomains = host.split(".");
+            id = subdomains[0]; // This will get 'abcde'
+        }
+        else if (host.includes("onrender.com")) {
+            const subdomains = host.split(".");
+            id = subdomains[0]; // This will get '4aa6d'
+        }
+        else if (host.includes("nip.io")) {
             id = host.split(".")[0];
         }
         else if (host.includes("localtest.me")) {
-            // Format: abcde.localtest.me
             id = host.split(".")[0];
         }
         else {
-            // Handle your original domain format or other cases
             id = host.split(".")[0];
         }
         const filePath = req.path || "/index.html"; // Default to index.html if no path
@@ -54,7 +59,6 @@ app.get("/*", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             Key: `dist/${id}${filePath}`,
         })
             .promise();
-        // Enhanced MIME type handling
         const mimeTypes = {
             ".html": "text/html",
             ".css": "text/css",
@@ -66,7 +70,6 @@ app.get("/*", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             ".svg": "image/svg+xml",
         };
         const ext = ((_a = filePath.match(/\.[^.]*$/)) === null || _a === void 0 ? void 0 : _a[0]) || "";
-        // @ts-ignore
         const contentType = mimeTypes[ext] || "application/octet-stream";
         res.set("Content-Type", contentType);
         res.send(contents.Body);
@@ -76,9 +79,4 @@ app.get("/*", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.status(error.statusCode || 500).send(error.message);
     }
 }));
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-    console.log(`You can access your deployments using the following formats:`);
-    console.log(`- http://[project-id].127.0.0.1.nip.io:${PORT}`);
-    console.log(`- http://[project-id].localtest.me:${PORT}`);
-});
+app.listen(3001);
